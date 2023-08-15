@@ -46,22 +46,27 @@ const getSinglePost = async (id: number): Promise<Post | null> => {
   return result;
 };
 
-const updatePostById = async (id: number, data: Partial<Post>): Promise<Post> => {
-  const result = await prisma.post.update({
-    where: {
-      id: id,
-    },
-    data,
-  });
+const updatePostById = async (id: number, data: Partial<Post>): Promise<Post | number> => {
+  // const result = await prisma.post.update({
+  //   where: {
+  //     id: id,
+  //   },
+  //   data,
+  // });
+
+  const result =
+    await prisma.$executeRaw`UPDATE "posts" SET title = ${data.title}, content = ${data.content} WHERE id = ${id}`;
 
   return result;
 };
-const deletePostById = async (id: number): Promise<Post> => {
-  const result = await prisma.post.delete({
-    where: {
-      id: id,
-    },
-  });
+const deletePostById = async (id: number): Promise<Post | number> => {
+  // const result = await prisma.post.delete({
+  //   where: {
+  //     id: id,
+  //   },
+  // });
+
+  const result = await prisma.$executeRaw`DELETE FROM "posts" WHERE id = ${id}`;
 
   return result;
 };
